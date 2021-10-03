@@ -235,6 +235,26 @@ void SeqListDelete (SL *ps, int pos) {
 	ps->size--;
 }
 
+
+// 查找
+bool SeqListFind (SL *ps, SQDataType x) {
+	for(int i = 0; i < ps->size; i++) {
+		if (ps->a[i] == x) {
+			return i;
+		}
+	}
+	return -1;
+} 
+
+
+// 对不用的空间进行销毁
+void SeqListDestory (SL *ps) {
+	free(ps->a);
+	ps->a = NULL;
+	ps->capacity = ps->size = 0;
+} 
+
+
 // 打印 
 void SeqListPrint (SL *ps) {
 	int i = 0;
@@ -259,10 +279,14 @@ void TestSeqList () {
 //	SeqListPopFront(&sl);
 
 //	SeqListInsert(&sl, 7, 10);
-	SeqListDelete(&sl, 7);
+//	SeqListDelete(&sl, 7);
+
+//	int res = SeqListFind(&sl, 104);
 	
 	SeqListPrint(&sl);
-
+	
+//	所有数据使用完之后进行销毁---防止内存泄露 
+	SeqListDestory(&sl);
 }
 
 // 主函数 
