@@ -95,6 +95,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h> 
+#include<assert.h>
 
 // 定义宏 --- 增强程序的可维护性 
 #define MAX_SIZE 10
@@ -116,10 +117,14 @@ void SeqListInit (SL *ps);
 void SeqListPushBack (SL *ps, SQDataType x);
 // 在头部插入 
 void SeqListPushFront (SL *ps, SQDataType x);
-// 头删
-void SeqListPopBack (SL *ps, SQDataType x);
 // 尾删
-void SeqListPopFront (SL *ps, SQDataType x);
+void SeqListPopBack (SL *ps);
+// 头删
+void SeqListPopFront (SL *ps);
+// 在某个位置进行插入
+void SeqListInsert (SL *ps, int i, SQDataType x); 
+// 在某个位置进行删除
+void SeqListDelete (SL *ps, int i); 
 
 // 输出表
 void SeqListPrint (SL *ps, SQDataType i); 
@@ -158,6 +163,7 @@ void SeqListPushBack (SL *ps, SQDataType x) {
 	ps->size++;
 }
 
+// 头插 
 void SeqListPushFront (SL *ps, SQDataType x) {
 	SeqListCapacity(ps);
 //	1、初始条件
@@ -171,6 +177,62 @@ void SeqListPushFront (SL *ps, SQDataType x) {
 //	printf("11111\n");
 	ps->a[0] = x;
 	ps->size++;
+}
+
+
+// 尾删 
+void SeqListPopBack (SL *ps) {
+	assert(ps->size > 0);
+//	ps->a[ps->size-1] = 0;
+	ps->size--;
+}
+
+// 头删
+void SeqListPopFront (SL *ps) {
+	// 断言 ps->size 大于 0，如果不是就报错！	
+	assert(ps->size > 0);
+	int start = 1;
+	while(start < ps->size) {
+		ps->a[start-1] = ps->a[start];
+		++start;
+	}
+	ps->size--; 
+}
+
+// 在某个位置进行插入 
+void SeqListInsert (SL *ps, int pos, SQDataType x) {
+	assert(pos <= ps->size);
+	SeqListCapacity(ps);
+	if (pos < 0 || pos > ps->size) {
+		printf("你要插入的数据位置%d不在范围内！！！\n", pos);
+		return;
+	}
+	
+	int end = ps->size - 1;
+	while(end >= pos) {
+		ps->a[end + 1] = ps->a[end];
+		end--;
+	}
+	
+	ps->a[pos] = x;
+	ps->size++;
+}
+
+// 在某个位置进行删除 
+void SeqListDelete (SL *ps, int pos) {
+	assert(pos <= ps->size);
+	if (pos < 0 || pos > ps->size) {
+		printf("你要删除的数据位置%d不在范围内！！！\n", pos);
+		return;
+	}
+	
+	int start = pos + 1;
+	while(start < ps->size) {
+		ps->a[start - 1] = ps->a[start];
+		start++;
+	}
+	
+	ps->size--;
 }
 
 // 打印 
@@ -192,6 +254,12 @@ void TestSeqList () {
 	SeqListPushFront(&sl, 104);
 	SeqListPushFront(&sl, 105);
 	SeqListPushFront(&sl, 106);
+	
+//	SeqListPopBack(&sl);
+//	SeqListPopFront(&sl);
+
+//	SeqListInsert(&sl, 7, 10);
+	SeqListDelete(&sl, 7);
 	
 	SeqListPrint(&sl);
 
