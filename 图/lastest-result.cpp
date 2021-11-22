@@ -158,8 +158,6 @@ void DFSTraverse(ALGraph G){
 }
 
 
-
-bool visited_B[MVNum];
 typedef struct{
 	int *base;
 	int front;
@@ -197,47 +195,40 @@ int QueueEmpty(SqQueue Q){
 
 SqQueue Q;
 //广度优先搜索遍历连通图 
-void BFS_AL(ALGraph G,int k){
+void BFS(ALGraph G,int k){
 	int i;
-//	SqQueue Q; 
 	ArcNode *p;
 	p=new ArcNode;
 	InitQueue(Q);
-	cout<<G.vertices[k].data;
-	visited_B[k]=1;
+	cout<<G.vertices[k].data; 
+	visited[k]=1;
 	EnQueue(Q,k);
-	while(!QueueEmpty){
+	while(QueueEmpty(Q)==0){
 		DeQueue(Q,i);
 		p=G.vertices[i].firstarc;
 		while(p!=NULL){
-			if(visited_B[p->adjvex]==0){
-				cout<<G.vertices[p->adjvex].data; 
-				visited_B[p->adjvex]=1;
+			if(visited[p->adjvex]==0){
+				cout<<G.vertices[p->adjvex].data;
+				visited[p->adjvex]=1;
 				EnQueue(Q,p->adjvex);
 			}
 			p=p->nextarc;
 		}
 	}
-	
-	for(int i = 0; i < G.vexnum; ++i) {
-		if (!visited_B[i]) {
-			BFS_AL(G, i);
-		}
-	}
 }
 
-//void BFSTraverse(ALGraph G){
-//	int v;
-//	char c;
-//	for(v=0;v<G.vexnum;v++) visited_B[v]=0;
-//	getchar();
-//	printf("\n从哪个点开始广度优先遍历");
-//	scanf("%c",&c);
-//	v=LocateVex(G,c);
-//	BFS_AL(G,v);
-//	for(v=0;v<G.vexnum;v++)
-//		if(!visited_B[v]) BFS_AL(G,v);
-//}
+void BFSTraverse(ALGraph G){
+	int v;char c;
+	for(v=0;v<G.vexnum;v++) visited[v]=0;
+	getchar();
+	cout<<"请输入广度优先遍历的开始点：\n";
+	cin>>c;
+	v=LocateVex(G,c);
+	BFS(G,v);
+	for(v=0;v<G.vexnum;v++)
+		if(!visited[v]) BFS(G,v);
+}
+
 
 
 //------------------------------------- 以下是拓扑排序用到的数据结构 -----------------------------------------------------------
@@ -337,10 +328,7 @@ int main() {
 	DFSTraverse(LG);
 	cout<<"\n";
 	// 从输入点进行广度优先遍历	
-//	BFSTraverse(LG);
-	int a;
-	cin>>a;
-	BFS_AL(LG, a);
+	BFSTraverse(LG);
 	cout<<"\n";
 	cout<<"拓扑排序的结果是：\n"; 
 	// 对图进行拓扑排序	
